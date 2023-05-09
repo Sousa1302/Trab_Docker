@@ -1,0 +1,80 @@
+version: '3.9'
+
+services:
+
+ 
+  web:
+    build: ./volumes/python/.
+    container_name: Python
+    ports:
+      - "8000:5000"
+    volumes:
+      - ./volumes/python:/app
+
+  node:
+    build: ./images/node/.
+    container_name: nodejs
+    command: npm start
+    volumes:
+      - ./volumes/node:/app
+    ports:
+      - "3000:3000"
+   
+    
+  php:
+    build: ./images/php/.
+    container_name: php
+    volumes: 
+      - ./volumes/php/src:/var/www/html
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+      - node
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+      - "8080:8080"
+
+  db:
+    image: mysql:5.6
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: user1
+      MYSQL_DATABASE: sousa
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql
+
+  mongo:
+    image: mongo:5.0
+    container_name: mongodb
+    volumes:
+      - ./volumes/mongodb:/data/db
+    ports: 
+      - "27017:27017"
+ 
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes: 
+      - ./volumes/redisdb:/data
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
